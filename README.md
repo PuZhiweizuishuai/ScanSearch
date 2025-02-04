@@ -100,16 +100,11 @@ API申请地址：https://www.aliyun.com/product/bailian
 
 ![秘塔AI搜索](/doc/img/07.jpg)
 
-点击最小化按钮可以缩小悬浮窗，这事你可以利用手机系统自带的 AI 功能对屏幕进行识别，获取问题信息
-
-![最小化](/doc/img/08.jpg)
-
-
-![最小化](/doc/img/09.jpg)
+点击最小化按钮可以缩小悬浮窗，这时你可以利用手机系统自带的 AI 功能对屏幕进行识别，获取问题信息
 
 
 
-## 下载链接
+## 下载链接 运行视频
 
 https://gitee.com/puzhiweizuishuai/ScanSearch/releases
 
