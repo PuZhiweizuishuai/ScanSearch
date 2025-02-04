@@ -14,7 +14,11 @@
 
 众所周知我是一个学渣，所以在搜答案方面颇有成就
 
-大概是在 4 年前，我写了这样一个脚本 [截图OCR识别后搜索题目获取答案](https://github.com/PuZhiweizuishuai/OCR-CopyText-And-Search)
+大概是在 4 年前，我写了这样一个脚本 
+
+GitHub：[截图OCR识别后搜索题目获取答案](https://github.com/PuZhiweizuishuai/OCR-CopyText-And-Search)
+
+码云：[截图OCR识别后搜索题目获取答案](https://gitee.com/puzhiweizuishuai/OCR-CopyText-And-Search)
 
 利用 ADB 对屏幕截图后进行 OCR 识别，然后将识别到的结果用搜索引擎和本地题库进行搜索，然后快速获取答案
 
@@ -23,6 +27,11 @@
 说干就干，感觉代码不是特别多，于是就有了这个项目
 
 因为没有做历史记录，提问每次只能问一下，所以这个 APP 就叫问一下了
+
+## 技术实现
+
+本来是想写的，但是我发现实在没啥可写的，因为大部分都是 AI 写的 😂😂😂
+
 
 ## 使用指南
 
@@ -74,7 +83,7 @@ API申请地址：https://www.aliyun.com/product/bailian
 
 ![搜索框](/doc/img/05.jpg)
 
-> 注意：如果需要对题目进行编辑，请先点击打开键盘获取焦点，不然无法输入，修改完成后请点击关闭键盘，读取屏幕数据会无法读取到当前屏幕信息
+> ⚠️注意：如果需要对题目进行编辑，请先点击打开 ⌨️ 键盘获取焦点，不然无法输入，修改完成后请点击关闭键盘，读取屏幕数据会无法读取到当前屏幕信息
 
 
 
