@@ -207,7 +207,11 @@ fun FloatingWindowContent(commonViewModel: CommonViewModel) {
                                 )
                                 Checkbox(
                                     checked = textMap[item.id]?.cheek ?: false,
-                                    onCheckedChange = { textMap[item.id]?.cheek = it },
+                                    onCheckedChange = {
+                                        // 创建一个新的 ScanSearchData 对象
+                                        val newItem = item.copy(cheek = it)
+                                        textMap[item.id] = newItem
+                                    },
                                     colors = CheckboxDefaults.colors(
                                         checkedColor = MaterialTheme.colorScheme.primary // 使用主题色
                                     )
@@ -315,6 +319,8 @@ fun FloatingWindowContent(commonViewModel: CommonViewModel) {
                             }
                             // 显示列表
                             isListVisible.value = true
+                            showWebView.value = false
+                            showResultVisible.value = false
                         },
                         modifier = Modifier.weight(1f),
                         containerColor = MaterialTheme.colorScheme.secondaryContainer // 使用次要容器色
