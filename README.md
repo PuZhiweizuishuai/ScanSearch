@@ -107,6 +107,12 @@ API申请地址：https://www.aliyun.com/product/bailian
 
 
 
+## 下载链接
+
+https://gitee.com/puzhiweizuishuai/ScanSearch/releases
+
+> 注意：无障碍权限属于敏感权限，请确认软件来源后再安装或者自己编译安装，避免造成损失
+
 
 ## 功能
 
