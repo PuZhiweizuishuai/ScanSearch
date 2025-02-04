@@ -1,5 +1,6 @@
 package com.buguagaoshu.scan.search.ui
 
+import android.app.Application
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -42,6 +43,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
@@ -51,6 +53,7 @@ import com.buguagaoshu.scan.search.config.StaticVariableConfig
 import com.buguagaoshu.scan.search.control.FxComposeControl
 import com.buguagaoshu.scan.search.control.HttpControl
 import com.buguagaoshu.scan.search.data.ChatResponse
+import com.buguagaoshu.scan.search.data.ScanSearchData
 import com.buguagaoshu.scan.search.data.SendData
 import com.buguagaoshu.scan.search.data.SendMessage
 
@@ -69,21 +72,22 @@ fun FloatingWindowContentPreview() {
 fun FloatingWindowContent(commonViewModel: CommonViewModel) {
     // 使用 mutableStateListOf 来管理可变列表，自动跟踪列表变化
 
-    val textList = remember { mutableStateListOf<String>() }
-    val textMap = remember { mutableStateMapOf<String, Boolean>() }
-
-    // 创建并记住滚动状态
-    val scrollState = rememberScrollState()
+    val textList = remember { mutableStateListOf<ScanSearchData>() }
+    val textMap = remember { mutableStateMapOf<String, ScanSearchData>() }
 
     // 控制数据列表的显示与不显示
     val isListVisible = remember { mutableStateOf(true) }
+    val showResultVisible = remember { mutableStateOf(false) }
+    val showWebView = remember { mutableStateOf(false) }
     val aiResultText = remember { mutableStateOf("") } // 新增AI结果状态
+    val keyboardText =  remember { mutableStateOf("打开键盘") }
+    var showKeyboard = false
 
     val questionText by commonViewModel.questionText.collectAsState()
 
     val view = LocalView.current
-
-
+    val context = LocalContext.current
+    val application = context.applicationContext as Application
     val alphabet = listOf("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K")
 
 
@@ -92,6 +96,8 @@ fun FloatingWindowContent(commonViewModel: CommonViewModel) {
     val modelName by commonViewModel.modelName.collectAsState()
 
     val apiKeyText by commonViewModel.apiKeyText.collectAsState()
+
+    val prompt by commonViewModel.promptText.collectAsState()
 
     ElevatedCard(
         elevation = CardDefaults.cardElevation(defaultElevation = 12.dp), // 增加阴影高度
@@ -123,7 +129,7 @@ fun FloatingWindowContent(commonViewModel: CommonViewModel) {
                 ) {
                     IconButton(
                         onClick = {
-                            FxComposeControl.updateDisplayMode()
+                            FxComposeControl.hideSearch(application)
                         },
                         modifier = Modifier.size(32.dp) // 固定按钮大小
                     ) {
@@ -166,6 +172,7 @@ fun FloatingWindowContent(commonViewModel: CommonViewModel) {
             )
 
 
+            // 读取的数据列表
             AnimatedVisibility(
                 visible = isListVisible.value,
                 modifier = Modifier.weight(1f)
@@ -192,15 +199,15 @@ fun FloatingWindowContent(commonViewModel: CommonViewModel) {
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Text(
-                                    text = item,
+                                    text = item.text,
                                     modifier = Modifier
                                         .weight(1f)
                                         .padding(end = 8.dp), // 添加右边距
                                     style = MaterialTheme.typography.bodyMedium
                                 )
                                 Checkbox(
-                                    checked = textMap[item] ?: false,
-                                    onCheckedChange = { textMap[item] = it },
+                                    checked = textMap[item.id]?.cheek ?: false,
+                                    onCheckedChange = { textMap[item.id]?.cheek = it },
                                     colors = CheckboxDefaults.colors(
                                         checkedColor = MaterialTheme.colorScheme.primary // 使用主题色
                                     )
@@ -213,7 +220,7 @@ fun FloatingWindowContent(commonViewModel: CommonViewModel) {
 
             // AI结果框
             AnimatedVisibility(
-                visible = !isListVisible.value,
+                visible = showResultVisible.value,
             ) {
                 val scrollState2 = rememberScrollState()
                 OutlinedTextField(
@@ -227,6 +234,12 @@ fun FloatingWindowContent(commonViewModel: CommonViewModel) {
                     //shape = RoundedCornerShape(8.dp),
                     maxLines = Int.MAX_VALUE
                 )
+            }
+
+            AnimatedVisibility(
+                visible = showWebView.value
+            ) {
+                MyWebView()
             }
 
 
@@ -250,15 +263,23 @@ fun FloatingWindowContent(commonViewModel: CommonViewModel) {
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     ActionButton(
-                        text = "显示键盘",
-                        onClick = { FxInputHelper.showKeyBoard("ScanSearch", view) },
+                        text = keyboardText.value,
+                        onClick = {
+                            if (!showKeyboard) {
+                                keyboardText.value = "关闭键盘"
+                                showKeyboard = true
+                                FxInputHelper.showKeyBoard("ScanSearch", view)
+                            } else {
+                                keyboardText.value = "显示键盘"
+                                showKeyboard = false
+                                FxInputHelper.hideKeyBoard("ScanSearch", view)
+                            }
+
+                        },
                         modifier = Modifier.weight(1f)
                     )
-                    ActionButton(
-                        text = "关闭键盘",
-                        onClick = { FxInputHelper.hideKeyBoard("ScanSearch", view) },
-                        modifier = Modifier.weight(1f)
-                    )
+
+
                     ActionButton(
                         text = "加载数据",
                         onClick = {
@@ -270,29 +291,51 @@ fun FloatingWindowContent(commonViewModel: CommonViewModel) {
                             var i = 0;
 
                             while (i < StaticVariableConfig.screenTextList.size) {
-                                if (alphabet.contains(StaticVariableConfig.screenTextList[i])) {
+                                if (alphabet.contains(StaticVariableConfig.screenTextList[i].text)) {
                                     if (i + 1 >= StaticVariableConfig.screenTextList.size) {
                                         textList.add(StaticVariableConfig.screenTextList[i])
                                     } else {
                                         // 处理只有的情况ABCD
-                                        textList.add("${StaticVariableConfig.screenTextList[i]}.${StaticVariableConfig.screenTextList[i + 1]}")
+                                        textList.add(
+                                            ScanSearchData(
+                                                StaticVariableConfig.screenTextList[i].id,
+                                                "${StaticVariableConfig.screenTextList[i].text}.${StaticVariableConfig.screenTextList[i + 1].text}"
+                                                )
+                                        )
                                         i++
                                     }
                                 } else {
                                     textList.add(StaticVariableConfig.screenTextList[i])
                                 }
-
                                 i++
                             }
 
                             textList.forEach { key ->
-                                textMap[key] = false
+                                textMap[key.id] = key
                             }
                             // 显示列表
                             isListVisible.value = true
                         },
                         modifier = Modifier.weight(1f),
                         containerColor = MaterialTheme.colorScheme.secondaryContainer // 使用次要容器色
+                    )
+
+                    ActionButton(
+                        text = "确认",
+                        onClick = {
+                            val stringQuestion = StringBuilder()
+                            for (item : ScanSearchData in textList) {
+                                if (textMap[item.id]?.cheek == true) {
+                                    stringQuestion.append("${item.text}\n")
+                                }
+                            }
+                            println(stringQuestion.toString())
+                            commonViewModel.updateQuestionText(stringQuestion.toString())
+                            // 新增隐藏列表逻辑
+                            isListVisible.value = false
+                            showResultVisible.value = true
+                        },
+                        modifier = Modifier.weight(1f)
                     )
                 }
 
@@ -302,25 +345,21 @@ fun FloatingWindowContent(commonViewModel: CommonViewModel) {
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     ActionButton(
-                        text = "确认",
+                        text = "打开网页",
                         onClick = {
-                            val stringQuestion = StringBuilder()
-                            for (item in textList) {
-                                if (textMap[item] == true) {
-                                    stringQuestion.append("${item}\n")
-                                }
-                            }
-                            println(stringQuestion.toString())
-                            commonViewModel.updateQuestionText(stringQuestion.toString())
-                            // 新增隐藏列表逻辑
                             isListVisible.value = false
+                            showResultVisible.value = false
+                            showWebView.value = true
                         },
                         modifier = Modifier.weight(1f)
                     )
+
                     FilledTonalButton(
                         onClick = {
                             // 新增隐藏列表逻辑
                             isListVisible.value = false
+                            showWebView.value = false
+                            showResultVisible.value = true
                             aiResultText.value = ""
                             if (questionText.isBlank()) {
                                 return@FilledTonalButton
@@ -331,32 +370,7 @@ fun FloatingWindowContent(commonViewModel: CommonViewModel) {
                                 listOf(
                                     SendMessage(
                                         "system",
-                                        """
-                                              【角色设定】
-                                              你是一位拥有全学科解题能力的专家导师，擅长通过分步拆解和逻辑推理解决难题。请按以下流程处理问题，如果用户提问不属于解题类型，也请你根据你自身的能力给用户进行解答，充当一个乐于助人的助理：
-
-                                              1. 题型识别
-                                              - 判断题目所属学科及知识点（如：高中数学/三角函数）
-                                              - 分析题目难度等级（基础/进阶/竞赛级）
-
-                                              2. 需求确认
-                                              - 明确用户需求类型：
-                                                ✅ 纯答案需求 → 简洁模式
-                                                ✅ 分步解析 → 教学模式
-                                                ✅ 思路点拨 → 启发模式
-                                                ✅ 答案验证 → 反向推导检查
-
-                                              3. 解题过程
-                                              - 关键公式/定理标注（如：使用勾股定理）
-                                              - 建立数学模型/逻辑框架
-                                              - 展示至少两种解题方法（如：代数法/几何法）
-                                              - 易错点预警（如：符号错误/单位换算）
-
-                                              4. 结果验证
-                                              - 交叉验证法（如：代入检验/极限值测试）
-                                              - 可视化辅助（几何题建议画图步骤）
-                                              - 提供扩展练习题（相似题型2-3道）
-                                          """.trimIndent()
+                                       prompt
                                     ),
                                     SendMessage(
                                         "user",

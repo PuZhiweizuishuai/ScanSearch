@@ -3,6 +3,9 @@ import android.accessibilityservice.AccessibilityService
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
 import com.buguagaoshu.scan.search.config.StaticVariableConfig
+import com.buguagaoshu.scan.search.data.ScanSearchData
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 
 class ScreenReaderService : AccessibilityService() {
@@ -44,6 +47,7 @@ class ScreenReaderService : AccessibilityService() {
 
     }
 
+    @OptIn(ExperimentalUuidApi::class)
     private fun traverseNodeLoop(node: AccessibilityNodeInfo) {
         val stack = mutableListOf<AccessibilityNodeInfo>()
         stack.add(node)
@@ -55,7 +59,9 @@ class ScreenReaderService : AccessibilityService() {
             val text = currentNode.text
             if (text != null && text.isNotEmpty()) {
                 // 存储数据
-                StaticVariableConfig.screenTextList.add(text.toString())
+                StaticVariableConfig.screenTextList.add(
+                    ScanSearchData(Uuid.random().toString(), text.toString())
+                )
             }
 
             // 遍历子节点并将它们添加到栈中

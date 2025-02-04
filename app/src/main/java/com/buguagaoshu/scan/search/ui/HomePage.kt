@@ -1,14 +1,15 @@
 package com.buguagaoshu.scan.search.ui
 
-import androidx.annotation.RestrictTo
+import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -23,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import com.buguagaoshu.scan.search.config.StaticVariableConfig
 import com.buguagaoshu.scan.search.utils.PreferencesDataStoreUtils
 import kotlinx.coroutines.launch
-
+import androidx.browser.customtabs.CustomTabsIntent
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -38,8 +39,11 @@ fun HomePage(commonViewModel: CommonViewModel ,openFloatingWindow: () -> Unit) {
 
     val modelName by commonViewModel.modelName.collectAsState()
 
+    val prompt by commonViewModel.promptText.collectAsState()
+
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
+    val scrollState = rememberScrollState()
 
     Scaffold(
         topBar = {
@@ -53,7 +57,8 @@ fun HomePage(commonViewModel: CommonViewModel ,openFloatingWindow: () -> Unit) {
         Column(
             modifier = Modifier
                 .padding(innerPadding)
-                .padding(16.dp),
+                .padding(16.dp)
+                .verticalScroll(scrollState),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             ExposedDropdownMenuBox(
@@ -130,6 +135,17 @@ fun HomePage(commonViewModel: CommonViewModel ,openFloatingWindow: () -> Unit) {
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
             )
 
+
+            TextField(
+                modifier = Modifier.fillMaxWidth(),
+                value = prompt,
+                maxLines = 5,
+                onValueChange = { commonViewModel.updatePrompt(it) },
+                label = { Text("自定义 prompt") },
+            )
+
+
+
             Button(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = {
@@ -157,6 +173,21 @@ fun HomePage(commonViewModel: CommonViewModel ,openFloatingWindow: () -> Unit) {
                 }
             ) {
                 Text("打开浮窗")
+            }
+
+            TextButton (
+                modifier = Modifier.fillMaxWidth(),
+                onClick = {
+                    val url = "https://gitee.com/puzhiweizuishuai/ScanSearch"
+                    val customTabsIntent = CustomTabsIntent.Builder().build()
+                    try {
+                        customTabsIntent.launchUrl(context, Uri.parse(url))
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+            ) {
+                Text("使用指南")
             }
         }
     }
