@@ -120,6 +120,9 @@ GitHub：https://github.com/PuZhiweizuishuai/ScanSearch/releases
 
 CloudFlare R2：https://img.buguagaoshu.com/data/%E9%97%AE%E4%B8%80%E4%B8%8B/%E9%97%AE%E4%B8%80%E4%B8%8B_v1.1.0.apk
 
+使用 CloudFlare R2 下载请复制链接到浏览器下载，直接访问链接会被拦截
+
+
 > *注意：无障碍权限属于敏感权限，请确认软件来源后再安装或者自己编译安装，避免造成损失*
 
 
