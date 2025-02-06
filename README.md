@@ -114,9 +114,13 @@ API申请地址：https://www.aliyun.com/product/bailian
 
 ## 下载链接
 
-https://gitee.com/puzhiweizuishuai/ScanSearch/releases
+GitHub：https://github.com/PuZhiweizuishuai/ScanSearch/releases
 
-> 注意：无障碍权限属于敏感权限，请确认软件来源后再安装或者自己编译安装，避免造成损失
+码云：https://gitee.com/puzhiweizuishuai/ScanSearch/releases
+
+CloudFlare R2：https://img.buguagaoshu.com/data/%E9%97%AE%E4%B8%80%E4%B8%8B/%E9%97%AE%E4%B8%80%E4%B8%8B_v1.1.0.apk
+
+> *注意：无障碍权限属于敏感权限，请确认软件来源后再安装或者自己编译安装，避免造成损失*
 
 
 ## 功能
