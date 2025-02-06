@@ -8,7 +8,7 @@ import kotlinx.serialization.json.JsonIgnoreUnknownKeys
 @JsonIgnoreUnknownKeys
 @Serializable
 data class ChatResponse(
-    val usage: Usage?,
+    val usage: Usage = Usage(0),
     val id: String?,
     val choices: List<Choice>
 )
@@ -17,12 +17,7 @@ data class ChatResponse(
 @JsonIgnoreUnknownKeys
 @Serializable
 data class Usage(
-    val completion_tokens: Int?,
-    val prompt_tokens: Int?,
-    val prompt_cache_hit_tokens: Int?,
-    val prompt_cache_miss_tokens: Int?,
-    val prompt_tokens_details: PromptTokensDetails?,
-    val total_tokens: Int?
+    val completion_tokens: Int?
 )
 
 @OptIn(ExperimentalSerializationApi::class)

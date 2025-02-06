@@ -10,6 +10,7 @@ import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.buguagaoshu.scan.search.config.StaticVariableConfig
 import com.buguagaoshu.scan.search.control.FxComposeControl
+import com.buguagaoshu.scan.search.data.ConfigData
 import com.buguagaoshu.scan.search.ui.CommonViewModel
 import com.buguagaoshu.scan.search.ui.HomePage
 import com.buguagaoshu.scan.search.ui.theme.SearchTheme
@@ -17,6 +18,7 @@ import com.buguagaoshu.scan.search.utils.PreferencesDataStoreUtils
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.serialization.json.Json
 
 
 @AndroidEntryPoint
@@ -65,75 +67,33 @@ class MainActivity : ComponentActivity() {
         println("初始化数据")
         // 使用lifecycleScope替代临时CoroutineScope
         activityScope.launch {
-            // 并行收集多个数据流
-            launch(Dispatchers.IO) { collectApiKey(commonViewModel) }
-            launch(Dispatchers.IO) { collectBaseUrl(commonViewModel) }
-            launch(Dispatchers.IO) { collectModelName(commonViewModel) }
-            launch(Dispatchers.IO) { collectOptions(commonViewModel) }
+            // 初始化配置
+            launch(Dispatchers.IO) { collectApiMap(commonViewModel) }
         }
     }
 
-    // 分离各个数据流收集逻辑
-    private suspend fun collectOptions(commonViewModel: CommonViewModel) {
+    private suspend fun collectApiMap(commonViewModel: CommonViewModel) {
         println("开始读取设置选项")
         try {
             PreferencesDataStoreUtils.readString(
                 application,
-                StaticVariableConfig.OPTIONS_NAME
+                StaticVariableConfig.API_MAP
             ).collect { value ->
-                println("收到设置选项值: $value")
-                when (value) {
-                    "DeepSeek" -> commonViewModel.optionIndex = 0
-                    else -> commonViewModel.optionIndex = 1
+                println(value)
+                var configMap : MutableMap<String, ConfigData> = mutableMapOf()
+                if (value == null || value.isBlank()) {
+                    return@collect
+                }
+
+                try {
+                    configMap = Json.decodeFromString<MutableMap<String, ConfigData>>(value)
+                    commonViewModel.addAllApiMap(configMap)
+                } catch (e: Exception) {
+                    return@collect
                 }
             }
         } catch (e: Exception) {
             println("读取设置选项失败: ${e.message}")
-        }
-    }
-
-    private suspend fun collectApiKey(commonViewModel: CommonViewModel) {
-        println("开始读取API KEY")
-        try {
-            PreferencesDataStoreUtils.readString(
-                application,
-                StaticVariableConfig.API_KEY
-            ).collect { value ->
-                println("收到API KEY值: ${value?.take(3)}...") // 安全日志
-                value?.let { commonViewModel.updateApiKeyText(it) }
-            }
-        } catch (e: Exception) {
-            println("读取API KEY失败: ${e.message}")
-        }
-    }
-
-    private suspend fun collectBaseUrl(commonViewModel: CommonViewModel) {
-        println("开始读取Base URL")
-        try {
-            PreferencesDataStoreUtils.readString(
-                application,
-                StaticVariableConfig.BASE_URL
-            ).collect { value ->
-                println("收到Base URL值: $value")
-                value?.let { commonViewModel.setBaseUrl(it) }
-            }
-        } catch (e: Exception) {
-            println("读取Base URL失败: ${e.message}")
-        }
-    }
-
-    private suspend fun collectModelName(commonViewModel: CommonViewModel) {
-        println("开始读取模型名称")
-        try {
-            PreferencesDataStoreUtils.readString(
-                application,
-                StaticVariableConfig.MODEL_NAME
-            ).collect { value ->
-                println("收到模型名称值: $value")
-                value?.let { commonViewModel.updateModelName(it) }
-            }
-        } catch (e: Exception) {
-            println("读取模型名称失败: ${e.message}")
         }
     }
 }

@@ -1,18 +1,32 @@
 package com.buguagaoshu.scan.search.ui
 
+import android.content.Context
+import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.remember
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.buguagaoshu.scan.search.config.StaticVariableConfig
+import com.buguagaoshu.scan.search.data.ConfigData
+import com.buguagaoshu.scan.search.data.ScanSearchData
+import com.buguagaoshu.scan.search.utils.PreferencesDataStoreUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.serialization.json.Json
 import javax.inject.Inject
 
 @HiltViewModel
 class CommonViewModel @Inject constructor() : ViewModel() {
+    private val _apiMap = mutableStateMapOf<String, ConfigData>()
+
+    private val _apiName = MutableStateFlow("")
+    val apiName = _apiName.asStateFlow()
+    private var _apiId: String = ""
+
     // ai 服务商列表
-    private val _aiServerBaseUrl = MutableStateFlow("https://api.deepseek.com")
-    val aiServerBaseUrl = _aiServerBaseUrl.asStateFlow();
+    private val _aiServerBaseUrl = MutableStateFlow("https://api.deepseek.com/chat/completions")
+    val aiServerBaseUrl = _aiServerBaseUrl.asStateFlow()
 
     // 存储 ai 服务商的 api key
     private val _apiKeyText = MutableStateFlow("")
@@ -51,12 +65,44 @@ class CommonViewModel @Inject constructor() : ViewModel() {
                                               4. 结果验证
                                               - 交叉验证法（如：代入检验/极限值测试）
                                               - 可视化辅助（几何题建议画图步骤）
-                                              - 提供扩展练习题（相似题型2-3道）
                                           """.trimIndent())
     val promptText = _promptText.asStateFlow()
 
 
-    var optionIndex = 0
+    val apiMap: Map<String, ConfigData> get() = _apiMap
+
+    // 向 Map 中添加元素的方法
+    fun addToApiMap(key: String, value: ConfigData) {
+        _apiMap[key] = value
+    }
+
+    fun addAllApiMap(map: Map<String, ConfigData>) {
+        _apiMap.putAll(map)
+    }
+
+    // 从 Map 中移除元素的方法
+    fun removeFromApiMap(key: String) {
+        _apiMap.remove(key)
+    }
+
+    // 更新配置文件
+    fun updateConfig(context: Context) {
+        viewModelScope.launch {
+            val str = Json.encodeToString(apiMap)
+            PreferencesDataStoreUtils.saveString(context, StaticVariableConfig.API_MAP, str)
+        }
+    }
+
+    fun showUserSelectConfig(configData: ConfigData) {
+        viewModelScope.launch {
+            _apiId = configData.id
+            _apiName.value = configData.name
+            _aiServerBaseUrl.value = configData.api
+            _modelName.value = configData.modelName
+            _apiKeyText.value = configData.apiKey
+            _promptText.value = configData.prompt
+        }
+    }
 
 
     fun updatePrompt(newPrompt: String) {
@@ -85,6 +131,13 @@ class CommonViewModel @Inject constructor() : ViewModel() {
         }
     }
 
+
+    fun updateApiName(newText: String) {
+        viewModelScope.launch {
+            _apiName.value = newText
+        }
+    }
+
     fun setBaseUrl(newUrl: String) {
         viewModelScope.launch {
             _aiServerBaseUrl.value = newUrl
@@ -92,15 +145,8 @@ class CommonViewModel @Inject constructor() : ViewModel() {
     }
 
     fun updateBaseUrl(newText: String) {
-        val url: String
-
-        if (newText == "DeepSeek") {
-            url = "https://api.deepseek.com"
-        } else {
-            url = newText
-        }
         viewModelScope.launch {
-            _aiServerBaseUrl.value = url
+            _aiServerBaseUrl.value = newText
         }
     }
 }

@@ -87,10 +87,13 @@ object HttpControl {
 
                 override fun onResponse(call: Call, response: Response) {
                     response.use {
-                        if (!response.isSuccessful) throw IOException("Unexpected code $response")
+                        if (!response.isSuccessful) {
+                            return
+                        }
                         val reader = response.body.charStream()
                         reader.forEachLine { line ->
                             if (line.isNotBlank()) {
+
                                 onChunkReceived(line)
                             }
                         }

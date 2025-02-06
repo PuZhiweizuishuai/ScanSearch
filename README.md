@@ -10,6 +10,14 @@
 
 因为还没有做聊天记录的功能，所以就只能问一下
 
+## 更新日志
+
+[更新日志](/CHANGELOG.md)
+
+## 运行展示
+
+https://www.bilibili.com/video/BV1PrNweHEDX
+
 ## 前情提要
 
 众所周知我是一个学渣，所以在搜答案方面颇有成就
@@ -104,7 +112,7 @@ API申请地址：https://www.aliyun.com/product/bailian
 
 
 
-## 下载链接 运行视频
+## 下载链接
 
 https://gitee.com/puzhiweizuishuai/ScanSearch/releases
 

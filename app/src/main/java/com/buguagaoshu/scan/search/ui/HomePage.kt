@@ -14,35 +14,46 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
-import com.buguagaoshu.scan.search.config.StaticVariableConfig
-import com.buguagaoshu.scan.search.utils.PreferencesDataStoreUtils
-import kotlinx.coroutines.launch
 import androidx.browser.customtabs.CustomTabsIntent
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Done
+import androidx.compose.material3.ButtonDefaults.buttonColors
+import com.buguagaoshu.scan.search.data.ConfigData
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalUuidApi::class, ExperimentalLayoutApi::class)
 @Composable
 fun HomePage(commonViewModel: CommonViewModel ,openFloatingWindow: () -> Unit) {
     val apiKeyText by commonViewModel.apiKeyText.collectAsState()
 
-    val options = listOf("DeepSeek", "其它")
-    var expanded by remember { mutableStateOf(false) }
-
-    var selectedOptionText by remember { mutableStateOf(options[commonViewModel.optionIndex]) }
     val baseUrl by commonViewModel.aiServerBaseUrl.collectAsState()
 
     val modelName by commonViewModel.modelName.collectAsState()
 
     val prompt by commonViewModel.promptText.collectAsState()
 
+    val apiName by commonViewModel.apiName.collectAsState()
+
+    val configMap = commonViewModel.apiMap
+
+    // 记录当前选中的 ConfigData
+    var selectedConfigData by remember { mutableStateOf<ConfigData?>(null) }
+    var showDeleteConfirmationDialog by remember { mutableStateOf(false) }
+
     val context = LocalContext.current
-    val scope = rememberCoroutineScope()
+
     val scrollState = rememberScrollState()
 
     Scaffold(
@@ -61,53 +72,42 @@ fun HomePage(commonViewModel: CommonViewModel ,openFloatingWindow: () -> Unit) {
                 .verticalScroll(scrollState),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            ExposedDropdownMenuBox(
-                expanded = expanded,
-                onExpandedChange = {
-                    expanded = !expanded
-                },
-
-                ) {
-                TextField(
-                    readOnly = true,
-                    value = selectedOptionText,
-                    onValueChange = { commonViewModel.updateBaseUrl(it) },
-                    label = { Text("请选择 AI 服务商") },
-                    trailingIcon = {
-                        ExposedDropdownMenuDefaults.TrailingIcon(
-                            expanded = expanded
-                        )
-                    },
-                    modifier = Modifier
-                        .menuAnchor()
-                        .fillMaxWidth()
-                )
-                ExposedDropdownMenu(
-                    expanded = expanded,
-                    onDismissRequest = {
-                        expanded = false
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    options.forEach { selectionOption ->
-                        DropdownMenuItem(
-                            text = { Text(selectionOption) },
-                            onClick = {
-                                selectedOptionText = selectionOption
-
-                                if (selectedOptionText != "其它") {
-                                    commonViewModel.updateBaseUrl(selectedOptionText)
-                                } else {
-                                    commonViewModel.setBaseUrl(baseUrl)
-                                }
-                                expanded = false
+            FlowRow(modifier = Modifier.padding(8.dp)) {
+                configMap.forEach { (key, value) ->
+                    ConfigFilterChip(
+                        configData = value,
+                        commonViewModel = commonViewModel,
+                        isSelected = value == selectedConfigData,
+                        onSelect = { newSelected ->
+                            // 如果点击的是已经选中的 ConfigFilterChip，则取消选中
+                            if (newSelected == selectedConfigData) {
+                                selectedConfigData = null
+                                newSelected.cheek = false
+                            } else {
+                                // 取消之前选中的 ConfigFilterChip
+                                selectedConfigData?.cheek = false
+                                // 选中新的 ConfigFilterChip
+                                selectedConfigData = newSelected
+                                newSelected.cheek = true
+                                commonViewModel.showUserSelectConfig(newSelected)
                             }
-                        )
-                    }
+                            commonViewModel.updateConfig(context)
+                        }
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
                 }
             }
 
-            if (selectedOptionText == "其它") {
+
+            TextField(
+                modifier = Modifier.fillMaxWidth(),
+                value = apiName,
+                onValueChange = { commonViewModel.updateApiName(it) },
+                label = { Text("配置文件名称") },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
+            )
+
+
                 TextField(
                     modifier = Modifier.fillMaxWidth(),
                     value = baseUrl,
@@ -116,7 +116,7 @@ fun HomePage(commonViewModel: CommonViewModel ,openFloatingWindow: () -> Unit) {
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
                 )
 
-            }
+
 
             TextField(
                 modifier = Modifier.fillMaxWidth(),
@@ -149,21 +149,69 @@ fun HomePage(commonViewModel: CommonViewModel ,openFloatingWindow: () -> Unit) {
             Button(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = {
-                    println(selectedOptionText)
                     println(commonViewModel.apiKeyText.value)
                     println(commonViewModel.aiServerBaseUrl.value)
-                    scope.launch {
-                        // 调用工具类保存数据
-                        PreferencesDataStoreUtils.saveString(context, StaticVariableConfig.OPTIONS_NAME, selectedOptionText)
-                        PreferencesDataStoreUtils.saveString(context, StaticVariableConfig.API_KEY, commonViewModel.apiKeyText.value)
-                        PreferencesDataStoreUtils.saveString(context, StaticVariableConfig.BASE_URL, commonViewModel.aiServerBaseUrl.value)
-                        PreferencesDataStoreUtils.saveString(context, StaticVariableConfig.MODEL_NAME, commonViewModel.modelName.value)
+                    var config = ConfigData(
+                        Uuid.random().toString(),
+                        commonViewModel.apiName.value,
+                        commonViewModel.aiServerBaseUrl.value,
+                        commonViewModel.modelName.value,
+                        commonViewModel.apiKeyText.value,
+                        commonViewModel.promptText.value
+                    )
+                    if (selectedConfigData != null) {
+                        config.id = selectedConfigData!!.id
                     }
 
-
+                    commonViewModel.addToApiMap(config.id, config)
+                    selectedConfigData = null
+                    commonViewModel.updateConfig(context)
                 }
             ) {
                 Text("保存配置")
+            }
+
+            Button(
+                colors = buttonColors(containerColor = MaterialTheme.colorScheme.error),
+                modifier = Modifier.fillMaxWidth(),
+                onClick = {
+                    if (selectedConfigData == null) {
+                        // 提示用户需要选中配置后才能删除
+                        android.widget.Toast.makeText(context, "需要选中配置后才能删除", android.widget.Toast.LENGTH_SHORT).show()
+                    } else {
+                        // 弹出确认删除的对话框
+                        showDeleteConfirmationDialog = true
+                    }
+                }
+            ) {
+                Text("删除配置")
+            }
+
+            if (showDeleteConfirmationDialog) {
+                AlertDialog(
+                    onDismissRequest = { showDeleteConfirmationDialog = false },
+                    title = { Text("确认删除") },
+                    text = { Text("是否确认删除当前选中配置？") },
+                    confirmButton = {
+                        Button(
+                            onClick = {
+                                selectedConfigData?.let { config ->
+                                    commonViewModel.removeFromApiMap(config.id)
+                                }
+                                showDeleteConfirmationDialog = false
+                            }
+                        ) {
+                            Text("确认")
+                        }
+                    },
+                    dismissButton = {
+                        Button(
+                            onClick = { showDeleteConfirmationDialog = false }
+                        ) {
+                            Text("取消")
+                        }
+                    }
+                )
             }
 
             OutlinedButton(
@@ -191,4 +239,34 @@ fun HomePage(commonViewModel: CommonViewModel ,openFloatingWindow: () -> Unit) {
             }
         }
     }
+}
+
+
+@Composable
+fun ConfigFilterChip(
+    configData: ConfigData,
+    commonViewModel: CommonViewModel,
+    isSelected: Boolean,
+    onSelect: (ConfigData) -> Unit
+) {
+    FilterChip(
+        onClick = {
+            onSelect(configData)
+        },
+        label = {
+            Text(configData.name)
+        },
+        selected = isSelected,
+        leadingIcon = if (isSelected) {
+            {
+                Icon(
+                    imageVector = Icons.Filled.Done,
+                    contentDescription = "Done icon",
+                    modifier = Modifier.size(FilterChipDefaults.IconSize)
+                )
+            }
+        } else {
+            null
+        },
+    )
 }
