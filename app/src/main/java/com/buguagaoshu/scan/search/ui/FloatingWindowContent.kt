@@ -3,10 +3,9 @@ package com.buguagaoshu.scan.search.ui
 import android.annotation.SuppressLint
 import android.app.Application
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -25,27 +24,7 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.CheckboxDefaults
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
-import androidx.compose.material3.FilledTonalButton
-import androidx.compose.material3.FilterChip
-import androidx.compose.material3.FilterChipDefaults
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -73,6 +52,7 @@ import com.buguagaoshu.scan.search.data.SendData
 import com.buguagaoshu.scan.search.data.SendMessage
 
 import com.petterp.floatingx.util.FxInputHelper
+import dev.jeziellago.compose.markdowntext.MarkdownText
 import kotlinx.serialization.json.Json
 
 
@@ -84,7 +64,6 @@ fun FloatingWindowContentPreview() {
 }
 
 @SuppressLint("UnrememberedMutableState")
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun FloatingWindowContent(commonViewModel: CommonViewModel) {
     // 使用 mutableStateListOf 来管理可变列表，自动跟踪列表变化
@@ -199,8 +178,13 @@ fun FloatingWindowContent(commonViewModel: CommonViewModel) {
                 thickness = 1.dp,
                 color = MaterialTheme.colorScheme.outlineVariant
             )
-            //MyExposedDropdownMenu(configMap)
-            FlowRow(modifier = Modifier.padding(0.dp)) {
+
+            // AI 服务商切换
+            Row(
+                modifier = Modifier
+                    .padding(0.dp)
+                    .horizontalScroll(rememberScrollState()) // 添加水平滚动条
+            ) {
                 configMap.forEach { (key, value) ->
                     ConfigMiniFilterChip(
                         configData = value,
@@ -282,17 +266,17 @@ fun FloatingWindowContent(commonViewModel: CommonViewModel) {
                 visible = showResultVisible.value,
             ) {
                 val scrollState2 = rememberScrollState()
-                OutlinedTextField(
-                    value = aiResultText.value,
-                    onValueChange = { /* 只读不需要修改 */ },
-                    modifier = Modifier
+                Column(
+                     modifier = Modifier
                         .height(270.dp)
                         .verticalScroll(scrollState2),
-                    label = { Text("AI分析结果") },
-                    readOnly = true,
-                    //shape = RoundedCornerShape(8.dp),
-                    maxLines = Int.MAX_VALUE
-                )
+                ) {
+                    MarkdownText(
+                        modifier = Modifier.padding(8.dp),
+                        markdown = aiResultText.value,
+                        isTextSelectable = true,
+                    )
+                }
             }
 
             AnimatedVisibility(
@@ -483,6 +467,9 @@ fun FloatingWindowContent(commonViewModel: CommonViewModel) {
                                         try {
                                             val str = jsonConfig.decodeFromString<ChatResponse>(jsonLine)
                                             if (str.choices.isNotEmpty()) {
+                                                if (str.choices[0].delta?.reasoning_content?.isNotEmpty() == true) {
+                                                    aiResultText.value += str.choices[0].delta?.reasoning_content
+                                                }
                                                 aiResultText.value += str.choices[0].delta?.content
                                             }
                                         } catch (e: Exception) {
@@ -507,7 +494,14 @@ fun FloatingWindowContent(commonViewModel: CommonViewModel) {
                                         println(str)
                                         try {
                                             val jsstr = jsonConfig.decodeFromString<ChatResponse>(str)
+
                                             if (jsstr.choices.isNotEmpty()) {
+                                                // 显示思维链
+                                                if (jsstr.choices[0].message?.reasoning_content?.isNotEmpty() == true) {
+                                                    aiResultText.value += "思考内容：\n"
+                                                    aiResultText.value += jsstr.choices[0].message?.reasoning_content
+                                                }
+                                                aiResultText.value += "回答：\n"
                                                 aiResultText.value += jsstr.choices[0].message?.content
                                             }
                                         } catch (e: Exception) {
@@ -567,6 +561,7 @@ fun ConfigMiniFilterChip(
     onSelect: (ConfigData) -> Unit
 ) {
     FilterChip(
+        modifier = Modifier.height(30.dp),
         onClick = {
             onSelect(configData)
         },

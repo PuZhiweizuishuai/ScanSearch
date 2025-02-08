@@ -48,6 +48,8 @@ data class Choice(
 @OptIn(ExperimentalSerializationApi::class)
 @JsonIgnoreUnknownKeys
 data class DeltaInfo(
+    // 思维链信息
+    val reasoning_content : String? = null,
     val content : String = "",
     val function_call: String? = null,
     val refusal: String? = null,
@@ -60,5 +62,6 @@ data class DeltaInfo(
 @JsonIgnoreUnknownKeys
 data class Message(
     val role: String?,
-    val content: String?
+    val content: String?,
+    val reasoning_content: String? = null
 )

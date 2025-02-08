@@ -17,7 +17,7 @@ android {
         minSdk = 26
         targetSdk = 34
         versionCode = 1
-        versionName = "1.1.0"
+        versionName = "1.2.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -44,7 +44,8 @@ android {
 }
 
 dependencies {
-    implementation("com.google.dagger:hilt-android:2.55")
+    implementation(libs.hilt.android)
+    implementation(libs.compose.markdown)
     implementation(libs.floatingx)
     implementation(libs.floatingx.compose)
     implementation(libs.okhttp)
@@ -52,7 +53,7 @@ dependencies {
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.webkit)
     implementation(libs.androidx.browser)
-    kapt("com.google.dagger:hilt-android-compiler:2.55")
+    kapt(libs.hilt.android.compiler)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)

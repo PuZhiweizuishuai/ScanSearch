@@ -18,6 +18,20 @@
 
 https://www.bilibili.com/video/BV1PrNweHEDX
 
+
+## 下载链接
+
+GitHub：https://github.com/PuZhiweizuishuai/ScanSearch/releases
+
+码云：https://gitee.com/puzhiweizuishuai/ScanSearch/releases
+
+CloudFlare R2：https://img.buguagaoshu.com/data/%E9%97%AE%E4%B8%80%E4%B8%8B/%E9%97%AE%E4%B8%80%E4%B8%8B_v1.2.0.apk
+
+使用 CloudFlare R2 下载请复制链接到浏览器下载，直接访问链接会被拦截
+
+
+> *注意：无障碍权限属于敏感权限，请确认软件来源后再安装或者自己编译安装，避免造成损失*
+
 ## 前情提要
 
 众所周知我是一个学渣，所以在搜答案方面颇有成就
@@ -59,7 +73,8 @@ GitHub：[截图OCR识别后搜索题目获取答案](https://github.com/PuZhiwe
 
 由于 DeepSeek 的服务目前用不了，暂时用阿里通义的 API 替代
 
-API申请地址：https://www.aliyun.com/product/bailian
+API申请地址：https://www.aliyun.com/minisite/goods?userCode=4i6gwidx
+
 
 登陆后进入控制台点右上角头像选 API-KEY 生成一个 API_KEY
 
@@ -69,6 +84,12 @@ API申请地址：https://www.aliyun.com/product/bailian
 
 
 ![填写配置](/doc/img/01.jpg)
+
+#### 其它可以白嫖的API服务地址
+
+字节火山：https://www.volcengine.com/product/doubao
+
+目前免费送 50 万 TOKE，支持满血 DeepSeek R1 模型
 
 
 ### 三、开始使用
@@ -109,21 +130,6 @@ API申请地址：https://www.aliyun.com/product/bailian
 ![秘塔AI搜索](/doc/img/07.jpg)
 
 点击最小化按钮可以缩小悬浮窗，这时你可以利用手机系统自带的 AI 功能对屏幕进行识别，获取问题信息
-
-
-
-## 下载链接
-
-GitHub：https://github.com/PuZhiweizuishuai/ScanSearch/releases
-
-码云：https://gitee.com/puzhiweizuishuai/ScanSearch/releases
-
-CloudFlare R2：https://img.buguagaoshu.com/data/%E9%97%AE%E4%B8%80%E4%B8%8B/%E9%97%AE%E4%B8%80%E4%B8%8B_v1.1.0.apk
-
-使用 CloudFlare R2 下载请复制链接到浏览器下载，直接访问链接会被拦截
-
-
-> *注意：无障碍权限属于敏感权限，请确认软件来源后再安装或者自己编译安装，避免造成损失*
 
 
 ## 功能

@@ -144,99 +144,104 @@ fun HomePage(commonViewModel: CommonViewModel ,openFloatingWindow: () -> Unit) {
                 label = { Text("自定义 prompt") },
             )
 
-
-
-            Button(
-                modifier = Modifier.fillMaxWidth(),
-                onClick = {
-                    println(commonViewModel.apiKeyText.value)
-                    println(commonViewModel.aiServerBaseUrl.value)
-                    var config = ConfigData(
-                        Uuid.random().toString(),
-                        commonViewModel.apiName.value,
-                        commonViewModel.aiServerBaseUrl.value,
-                        commonViewModel.modelName.value,
-                        commonViewModel.apiKeyText.value,
-                        commonViewModel.promptText.value
-                    )
-                    if (selectedConfigData != null) {
-                        config.id = selectedConfigData!!.id
-                    }
-
-                    commonViewModel.addToApiMap(config.id, config)
-                    selectedConfigData = null
-                    commonViewModel.updateConfig(context)
-                }
+            Column(
+                modifier = Modifier
+                    .padding(8.dp),
+                verticalArrangement = Arrangement.spacedBy(4.dp),
             ) {
-                Text("保存配置")
-            }
+                Button(
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = {
+                        println(commonViewModel.apiKeyText.value)
+                        println(commonViewModel.aiServerBaseUrl.value)
+                        val config = ConfigData(
+                            Uuid.random().toString(),
+                            commonViewModel.apiName.value,
+                            commonViewModel.aiServerBaseUrl.value,
+                            commonViewModel.modelName.value,
+                            commonViewModel.apiKeyText.value,
+                            commonViewModel.promptText.value
+                        )
+                        if (selectedConfigData != null) {
+                            config.id = selectedConfigData!!.id
+                        }
 
-            Button(
-                colors = buttonColors(containerColor = MaterialTheme.colorScheme.error),
-                modifier = Modifier.fillMaxWidth(),
-                onClick = {
-                    if (selectedConfigData == null) {
-                        // 提示用户需要选中配置后才能删除
-                        android.widget.Toast.makeText(context, "需要选中配置后才能删除", android.widget.Toast.LENGTH_SHORT).show()
-                    } else {
-                        // 弹出确认删除的对话框
-                        showDeleteConfirmationDialog = true
+                        commonViewModel.addToApiMap(config.id, config)
+                        selectedConfigData = null
+                        commonViewModel.updateConfig(context)
                     }
+                ) {
+                    Text("保存配置")
                 }
-            ) {
-                Text("删除配置")
-            }
 
-            if (showDeleteConfirmationDialog) {
-                AlertDialog(
-                    onDismissRequest = { showDeleteConfirmationDialog = false },
-                    title = { Text("确认删除") },
-                    text = { Text("是否确认删除当前选中配置？") },
-                    confirmButton = {
-                        Button(
-                            onClick = {
-                                selectedConfigData?.let { config ->
-                                    commonViewModel.removeFromApiMap(config.id)
+                Button(
+                    colors = buttonColors(containerColor = MaterialTheme.colorScheme.error),
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = {
+                        if (selectedConfigData == null) {
+                            // 提示用户需要选中配置后才能删除
+                            android.widget.Toast.makeText(context, "需要选中配置后才能删除", android.widget.Toast.LENGTH_SHORT).show()
+                        } else {
+                            // 弹出确认删除的对话框
+                            showDeleteConfirmationDialog = true
+                        }
+                    }
+                ) {
+                    Text("删除配置")
+                }
+
+                if (showDeleteConfirmationDialog) {
+                    AlertDialog(
+                        onDismissRequest = { showDeleteConfirmationDialog = false },
+                        title = { Text("确认删除") },
+                        text = { Text("是否确认删除当前选中配置？") },
+                        confirmButton = {
+                            Button(
+                                onClick = {
+                                    selectedConfigData?.let { config ->
+                                        commonViewModel.removeFromApiMap(config.id)
+                                    }
+                                    showDeleteConfirmationDialog = false
                                 }
-                                showDeleteConfirmationDialog = false
+                            ) {
+                                Text("确认")
                             }
-                        ) {
-                            Text("确认")
+                        },
+                        dismissButton = {
+                            Button(
+                                onClick = { showDeleteConfirmationDialog = false }
+                            ) {
+                                Text("取消")
+                            }
                         }
-                    },
-                    dismissButton = {
-                        Button(
-                            onClick = { showDeleteConfirmationDialog = false }
-                        ) {
-                            Text("取消")
+                    )
+                }
+
+                OutlinedButton(
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = {
+                        openFloatingWindow()
+                    }
+                ) {
+                    Text("打开浮窗")
+                }
+
+                TextButton (
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = {
+                        val url = "https://gitee.com/puzhiweizuishuai/ScanSearch"
+                        val customTabsIntent = CustomTabsIntent.Builder().build()
+                        try {
+                            customTabsIntent.launchUrl(context, Uri.parse(url))
+                        } catch (e: Exception) {
+                            e.printStackTrace()
                         }
                     }
-                )
+                ) {
+                    Text("使用指南")
+                }
             }
 
-            OutlinedButton(
-                modifier = Modifier.fillMaxWidth(),
-                onClick = {
-                    openFloatingWindow()
-                }
-            ) {
-                Text("打开浮窗")
-            }
-
-            TextButton (
-                modifier = Modifier.fillMaxWidth(),
-                onClick = {
-                    val url = "https://gitee.com/puzhiweizuishuai/ScanSearch"
-                    val customTabsIntent = CustomTabsIntent.Builder().build()
-                    try {
-                        customTabsIntent.launchUrl(context, Uri.parse(url))
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
-                }
-            ) {
-                Text("使用指南")
-            }
         }
     }
 }
