@@ -28,6 +28,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
@@ -94,6 +95,10 @@ fun FloatingWindowContent(commonViewModel: CommonViewModel) {
 
     val prompt by commonViewModel.promptText.collectAsState()
 
+
+    // 透明度调节
+    var transparency by remember { mutableFloatStateOf(1f) }
+
     // 找到cheek为true的ConfigData，如果没有则使用第一个
     // 记录当前选中的 ConfigData
     var selectedConfigData by remember { mutableStateOf<ConfigData?>(null) }
@@ -108,10 +113,13 @@ fun FloatingWindowContent(commonViewModel: CommonViewModel) {
     }
 
     ElevatedCard(
-        elevation = CardDefaults.cardElevation(defaultElevation = 12.dp), // 增加阴影高度
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp), // 增加阴影高度
         shape = RoundedCornerShape(16.dp), // 添加圆角
         modifier = Modifier
-            .size(width = 240.dp, height = 530.dp) // 调整高度以显示更多内容
+            .size(width = 240.dp, height = 530.dp), // 调整高度以显示更多内容
+        colors = CardDefaults.elevatedCardColors(
+            containerColor = Color.White.copy(alpha = transparency) // 使用 Color.White 作为基础颜色，并根据透明度变量调整透明度
+        )
     ) {
         Column(
             modifier = Modifier
@@ -173,17 +181,22 @@ fun FloatingWindowContent(commonViewModel: CommonViewModel) {
             }
 
             // 分割线
-            HorizontalDivider(
-                modifier = Modifier.padding(vertical = 4.dp),
-                thickness = 1.dp,
-                color = MaterialTheme.colorScheme.outlineVariant
+//            HorizontalDivider(
+//                modifier = Modifier.padding(vertical = 4.dp),
+//                thickness = 1.dp,
+//                color = MaterialTheme.colorScheme.outlineVariant
+//            )
+            Slider(
+                modifier = Modifier.height(12.dp),
+                value = transparency,
+                onValueChange = { transparency = it }
             )
 
             // AI 服务商切换
             Row(
                 modifier = Modifier
                     .padding(0.dp)
-                    .horizontalScroll(rememberScrollState()) // 添加水平滚动条
+                    .horizontalScroll(rememberScrollState()), // 添加水平滚动条
             ) {
                 configMap.forEach { (key, value) ->
                     ConfigMiniFilterChip(
@@ -220,7 +233,8 @@ fun FloatingWindowContent(commonViewModel: CommonViewModel) {
                 LazyColumn(
                     modifier = Modifier
                         .weight(1f)
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
+                        .height(305.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     items(textList) { item ->
@@ -268,7 +282,7 @@ fun FloatingWindowContent(commonViewModel: CommonViewModel) {
                 val scrollState2 = rememberScrollState()
                 Column(
                      modifier = Modifier
-                        .height(270.dp)
+                        .height(285.dp)
                         .verticalScroll(scrollState2),
                 ) {
                     MarkdownText(

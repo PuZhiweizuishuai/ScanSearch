@@ -108,13 +108,13 @@ fun HomePage(commonViewModel: CommonViewModel ,openFloatingWindow: () -> Unit) {
             )
 
 
-                TextField(
-                    modifier = Modifier.fillMaxWidth(),
-                    value = baseUrl,
-                    onValueChange = { commonViewModel.updateBaseUrl(it) },
-                    label = { Text("请输入服务器地址") },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
-                )
+            TextField(
+                modifier = Modifier.fillMaxWidth(),
+                value = baseUrl,
+                onValueChange = { commonViewModel.updateBaseUrl(it) },
+                label = { Text("请输入服务器地址") },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
+            )
 
 
 

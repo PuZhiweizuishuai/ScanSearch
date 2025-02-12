@@ -19,7 +19,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 @Composable
 fun MyWebView () {
     AndroidView(
-        modifier = Modifier.height(225.dp),
+        modifier = Modifier.height(285.dp),
         factory = { context ->
             WebView(context).apply {
                 settings.apply {
@@ -30,6 +30,7 @@ fun MyWebView () {
                     useWideViewPort = true
                     loadWithOverviewMode = true
                     domStorageEnabled = true
+
                     databaseEnabled = true
                     setSupportMultipleWindows(true)
                     javaScriptCanOpenWindowsAutomatically = true

@@ -25,7 +25,7 @@ GitHub：https://github.com/PuZhiweizuishuai/ScanSearch/releases
 
 码云：https://gitee.com/puzhiweizuishuai/ScanSearch/releases
 
-CloudFlare R2：https://img.buguagaoshu.com/data/%E9%97%AE%E4%B8%80%E4%B8%8B/%E9%97%AE%E4%B8%80%E4%B8%8B_v1.2.0.apk
+CloudFlare R2：https://img.buguagaoshu.com/data/%E9%97%AE%E4%B8%80%E4%B8%8B/%E9%97%AE%E4%B8%80%E4%B8%8B_1.3.0.apk
 
 使用 CloudFlare R2 下载请复制链接到浏览器下载，直接访问链接会被拦截
 
@@ -125,11 +125,17 @@ API申请地址：https://www.aliyun.com/minisite/goods?userCode=4i6gwidx
 
 ### 四、其它功能
 
+#### 1、web搜索
+
 点击打开网页可以调用 秘塔AI搜索，不过由于显示界面太小，所以显示会有一些问题
 
 ![秘塔AI搜索](/doc/img/07.jpg)
 
 点击最小化按钮可以缩小悬浮窗，这时你可以利用手机系统自带的 AI 功能对屏幕进行识别，获取问题信息
+
+#### 2、悬浮窗透明度调节
+
+悬浮窗标题下方的滑块滑动可以调节窗口透明度
 
 
 ## 功能
@@ -141,4 +147,4 @@ API申请地址：https://www.aliyun.com/minisite/goods?userCode=4i6gwidx
 - [x] 利用 WebView 显示搜索引擎或其它大模型的结果，部分完成
 - [ ] 聊天历史记录
 - [ ] 自建题库
-- [ ] UI 优化
+- [X] UI 优化
