@@ -1,5 +1,9 @@
 # 问一下
 
+## 语言 README Language
+
+[English](/README_EN.md)
+
 ## 简介
 
 这是一个利用 Android 无障碍功能 + 悬浮窗 + 大模型的搜题应用
