@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">검색一下</string>
+    <string name="app_title">단지 질문一下</string>
+    <string name="config_file_name">구성 파일 이름</string>
+    <string name="please_enter_server_address">서버 주소를 입력하세요</string>
+    <string name="please_enter_model_name">모델 이름을 입력하세요</string>
+    <string name="please_enter_API_Key">API 키를 입력하세요</string>
+    <string name="customize_the_prompt">사용자 지정 프롬프트</string>
+    <string name="save_config">구성 저장</string>
+    <string name="delete_config_tips">구성을 선택해야 삭제할 수 있습니다</string>
+    <string name="delete_config">구성 삭제</string>
+    <string name="confirm_deletion">삭제 확인</string>
+    <string name="config_delete_tips">현재 선택한 구성을 삭제하시겠습니까?</string>
+    <string name="confirm">확인</string>
+    <string name="cancel">취소</string>
+    <string name="open_float">플로팅 창 열기</string>
+    <string name="usage_guide">사용 가이드</string>
+    <string name="float_title">답변 플로팅 창</string>
+    <string name="search_tips">질문 검색할 데이터가 필요합니다</string>
+    <string name="open_web">웹 페이지 열기</string>
+    <string name="ask_question">질문</string>
+    <string name="open_keyboard">키보드 열기</string>
+    <string name="close_keyboard">키보드 닫기</string>
+    <string name="load_data">데이터 로드</string>
+    <string name="stream">스트림</string>
+    <string name="close_stream">스트림 닫기</string>
+</resources>

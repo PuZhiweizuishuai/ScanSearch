@@ -22,6 +22,10 @@
 
 https://www.bilibili.com/video/BV1PrNweHEDX
 
+## 多语言支持
+
+目前支持：中文、英语、俄语、法语、德语、日语、韩语
+
 
 ## 下载链接
 

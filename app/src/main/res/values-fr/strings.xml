@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Recherche</string>
+    <string name="app_title">Seulement poser une question</string>
+    <string name="config_file_name">Nom du fichier de configuration</string>
+    <string name="please_enter_server_address">Veuillez saisir l\'adresse du serveur</string>
+    <string name="please_enter_model_name">Veuillez saisir le nom du modèle</string>
+    <string name="please_enter_API_Key">Veuillez saisir la clé API</string>
+    <string name="customize_the_prompt">Personnaliser la requête</string>
+    <string name="save_config">Enregistrer la configuration</string>
+    <string name="delete_config_tips">La configuration doit être sélectionnée avant de pouvoir la supprimer</string>
+    <string name="delete_config">Supprimer la configuration</string>
+    <string name="confirm_deletion">Confirmer la suppression</string>
+    <string name="config_delete_tips">Êtes-vous sûr de vouloir supprimer la configuration actuellement sélectionnée?</string>
+    <string name="confirm">Confirmer</string>
+    <string name="cancel">Annuler</string>
+    <string name="open_float">Ouvrir la fenêtre flottante</string>
+    <string name="usage_guide">Guide d\'utilisation</string>
+    <string name="float_title">Fenêtre flottante de réponse</string>
+    <string name="search_tips">Données à interroger pour la recherche</string>
+    <string name="open_web">Ouvrir la page web</string>
+    <string name="ask_question">Poser une question</string>
+    <string name="open_keyboard">Ouvrir le clavier</string>
+    <string name="close_keyboard">Fermer le clavier</string>
+    <string name="load_data">Charger les données</string>
+    <string name="stream">Flux</string>
+    <string name="close_stream">Fermer le flux</string>
+</resources>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Suchen</string>
+    <string name="app_title">Nur eine Frage stellen</string>
+    <string name="config_file_name">Name der Konfigurationsdatei</string>
+    <string name="please_enter_server_address">Bitte geben Sie die Serveradresse ein</string>
+    <string name="please_enter_model_name">Bitte geben Sie den Modellnamen ein</string>
+    <string name="please_enter_API_Key">Bitte geben Sie den API-Schlüssel ein</string>
+    <string name="customize_the_prompt">Benutzerdefinierter Prompt</string>
+    <string name="save_config">Konfiguration speichern</string>
+    <string name="delete_config_tips">Die Konfiguration muss ausgewählt werden, bevor sie gelöscht werden kann</string>
+    <string name="delete_config">Konfiguration löschen</string>
+    <string name="confirm_deletion">Löschung bestätigen</string>
+    <string name="config_delete_tips">Möchten Sie die derzeit ausgewählte Konfiguration wirklich löschen?</string>
+    <string name="confirm">Bestätigen</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="open_float">Fenster öffnen</string>
+    <string name="usage_guide">Nutzungsanleitung</string>
+    <string name="float_title">Fenster für die Fragebeantwortung</string>
+    <string name="search_tips">Die zu suchenden und zu fragenden Daten werden benötigt</string>
+    <string name="open_web">Webseite öffnen</string>
+    <string name="ask_question">Frage stellen</string>
+    <string name="open_keyboard">Tastatur öffnen</string>
+    <string name="close_keyboard">Tastatur schließen</string>
+    <string name="load_data">Daten laden</string>
+    <string name="stream">Strom</string>
+    <string name="close_stream">Strom schließen</string>
+</resources>

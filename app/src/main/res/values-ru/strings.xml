@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Поиск</string>
+    <string name="app_title">Только спросить</string>
+    <string name="config_file_name">Имя конфигурационного файла</string>
+    <string name="please_enter_server_address">Пожалуйста, введите адрес сервера</string>
+    <string name="please_enter_model_name">Пожалуйста, введите название модели</string>
+    <string name="please_enter_API_Key">Пожалуйста, введите API Key</string>
+    <string name="customize_the_prompt">Настроить подсказку</string>
+    <string name="save_config">Сохранить конфигурацию</string>
+    <string name="delete_config_tips">Необходимо выбрать конфигурацию для удаления</string>
+    <string name="delete_config">Удалить конфигурацию</string>
+    <string name="confirm_deletion">Подтвердить удаление</string>
+    <string name="config_delete_tips">Вы уверены, что хотите удалить выбранную конфигурацию?</string>
+    <string name="confirm">Подтвердить</string>
+    <string name="cancel">Отмена</string>
+    <string name="open_float">Открыть плавающее окно</string>
+    <string name="usage_guide">Руководство пользователя</string>
+    <string name="float_title">Плавающее окно ответов</string>
+    <string name="search_tips">Данные для поиска по запросу</string>
+    <string name="open_web">Открыть веб-страницу</string>
+    <string name="ask_question">Задать вопрос</string>
+    <string name="open_keyboard">Открыть клавиатуру</string>
+    <string name="close_keyboard">Закрыть клавиатуру</string>
+    <string name="load_data">Загрузить данные</string>
+    <string name="stream">Поток</string>
+    <string name="close_stream">Закрыть поток</string>
+</resources>

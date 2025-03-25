@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.res.stringResource
 import com.buguagaoshu.scan.search.config.StaticVariableConfig
 import com.buguagaoshu.scan.search.ui.CommonViewModel
 import com.buguagaoshu.scan.search.ui.FloatingWindowContent
@@ -12,6 +13,7 @@ import com.petterp.floatingx.assist.FxDisplayMode
 import com.petterp.floatingx.assist.FxGravity
 import com.petterp.floatingx.assist.FxScopeType
 import com.petterp.floatingx.compose.enableComposeSupport
+import com.buguagaoshu.scan.search.R.string as TextValue
 
 object FxComposeControl {
     private val _TAG = "ScanSearch"
@@ -66,7 +68,7 @@ object FxComposeControl {
                                 FloatingX.controlOrNull(_TAG)?.show()
                                 FloatingX.controlOrNull(_minimize_tag)?.hide()
                             }) {
-                                Text(text = "打开搜索框")
+                                Text(text = stringResource(TextValue.open_float))
                             }
                         }
                     }

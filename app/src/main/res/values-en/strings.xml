@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">search</string>
+    <string name="app_title">Ask a question</string>
+    <string name="config_file_name">Configuration file name</string>
+    <string name="please_enter_server_address">Please enter the server address</string>
+    <string name="please_enter_model_name">Please enter the model name</string>
+    <string name="please_enter_API_Key">Please enter the API Key</string>
+    <string name="customize_the_prompt">Customize the prompt</string>
+    <string name="save_config">Save the configuration</string>
+    <string name="delete_config_tips">You need to select the configuration first before you can delete it</string>
+    <string name="delete_config">Delete the configuration</string>
+    <string name="confirm_deletion">Confirm deletion</string>
+    <string name="config_delete_tips">Are you sure you want to delete the currently selected configuration?</string>
+    <string name="confirm">Confirm</string>
+    <string name="cancel">Cancel</string>
+    <string name="open_float">Open the floating window</string>
+    <string name="usage_guide">Usage Guide</string>
+    <string name="float_title">Answer Floating</string>
+    <string name="search_tips">The data that needs to be searched by asking questions</string>
+    <string name="open_web">open web</string>
+    <string name="ask_question">ask a question</string>
+    <string name="open_keyboard">open keyboard</string>
+    <string name="close_keyboard">close keyboard</string>
+    <string name="load_data">Load data</string>
+    <string name="stream">stream</string>
+    <string name="close_stream">close stream</string>
+</resources>

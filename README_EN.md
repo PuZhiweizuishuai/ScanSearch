@@ -24,6 +24,10 @@ Since the chat history function has not been implemented yet, it can only be use
 
 https://www.bilibili.com/video/BV1PrNweHEDX
 
+## Multilingual Support
+
+Currently supported languages: Chinese, English, Russian, French, German, Japanese, Korean
+
 
 ## Download Links
 
@@ -40,7 +44,7 @@ For downloading from CloudFlare R2, please copy the link to your browser. Direct
 
 ## Background Information
 
-As we all know, I'm a poor student, so I've achieved quite a bit in the aspect of searching for answers.
+As we all know, I'm a study noob, so I've achieved quite a bit in the aspect of searching for answers.
 
 
 About four years ago, I wrote such a script.

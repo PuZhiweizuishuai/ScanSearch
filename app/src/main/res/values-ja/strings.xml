@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">検索する</string>
+    <string name="app_title">ただ尋ねるだけ</string>
+    <string name="config_file_name">設定ファイル名</string>
+    <string name="please_enter_server_address">サーバーアドレスを入力してください</string>
+    <string name="please_enter_model_name">モデル名を入力してください</string>
+    <string name="please_enter_API_Key">APIキーを入力してください</string>
+    <string name="customize_the_prompt">プロンプトをカスタマイズする</string>
+    <string name="save_config">設定を保存する</string>
+    <string name="delete_config_tips">設定を選択してから削除できます</string>
+    <string name="delete_config">設定を削除する</string>
+    <string name="confirm_deletion">削除を確認する</string>
+    <string name="config_delete_tips">現在選択している設定を削除することを確認しますか？</string>
+    <string name="confirm">確認する</string>
+    <string name="cancel">キャンセル</string>
+    <string name="open_float">フローティングウィンドウを開く</string>
+    <string name="usage_guide">使い方ガイド</string>
+    <string name="float_title">解答フローティングウィンドウ</string>
+    <string name="search_tips">質問して検索するデータが必要です</string>
+    <string name="open_web">ウェブページを開く</string>
+    <string name="ask_question">質問する</string>
+    <string name="open_keyboard">キーボードを開く</string>
+    <string name="close_keyboard">キーボードを閉じる</string>
+    <string name="load_data">データを読み込む</string>
+    <string name="stream">ストリーム</string>
+    <string name="close_stream">ストリームを閉じる</string>
+</resources>

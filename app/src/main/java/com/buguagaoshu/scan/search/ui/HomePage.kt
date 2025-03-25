@@ -29,9 +29,11 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.ButtonDefaults.buttonColors
+import androidx.compose.ui.res.stringResource
 import com.buguagaoshu.scan.search.data.ConfigData
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
+import com.buguagaoshu.scan.search.R.string as TextValue
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalUuidApi::class, ExperimentalLayoutApi::class)
 @Composable
@@ -55,12 +57,13 @@ fun HomePage(commonViewModel: CommonViewModel ,openFloatingWindow: () -> Unit) {
     val context = LocalContext.current
 
     val scrollState = rememberScrollState()
+    val tipsText = stringResource(TextValue.delete_config_tips)
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
-                    Text("只能问一下")
+                    Text(stringResource(id = TextValue.app_title))
                 }
             )
         },
@@ -103,7 +106,7 @@ fun HomePage(commonViewModel: CommonViewModel ,openFloatingWindow: () -> Unit) {
                 modifier = Modifier.fillMaxWidth(),
                 value = apiName,
                 onValueChange = { commonViewModel.updateApiName(it) },
-                label = { Text("配置文件名称") },
+                label = { Text(stringResource(TextValue.config_file_name)) },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
             )
 
@@ -112,7 +115,7 @@ fun HomePage(commonViewModel: CommonViewModel ,openFloatingWindow: () -> Unit) {
                 modifier = Modifier.fillMaxWidth(),
                 value = baseUrl,
                 onValueChange = { commonViewModel.updateBaseUrl(it) },
-                label = { Text("请输入服务器地址") },
+                label = { Text(stringResource(TextValue.please_enter_server_address)) },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
             )
 
@@ -122,7 +125,7 @@ fun HomePage(commonViewModel: CommonViewModel ,openFloatingWindow: () -> Unit) {
                 modifier = Modifier.fillMaxWidth(),
                 value = modelName,
                 onValueChange = { commonViewModel.updateModelName(it) },
-                label = { Text("请输入模型名称") },
+                label = { Text(stringResource(TextValue.please_enter_model_name)) },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
             )
 
@@ -130,7 +133,7 @@ fun HomePage(commonViewModel: CommonViewModel ,openFloatingWindow: () -> Unit) {
                 modifier = Modifier.fillMaxWidth(),
                 value = apiKeyText,
                 onValueChange = { commonViewModel.updateApiKeyText(it) },
-                label = { Text("请输入API Key") },
+                label = { Text(stringResource(TextValue.please_enter_API_Key)) },
                 visualTransformation = PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
             )
@@ -141,7 +144,7 @@ fun HomePage(commonViewModel: CommonViewModel ,openFloatingWindow: () -> Unit) {
                 value = prompt,
                 maxLines = 5,
                 onValueChange = { commonViewModel.updatePrompt(it) },
-                label = { Text("自定义 prompt") },
+                label = { Text(stringResource(TextValue.customize_the_prompt)) },
             )
 
             Column(
@@ -171,7 +174,7 @@ fun HomePage(commonViewModel: CommonViewModel ,openFloatingWindow: () -> Unit) {
                         commonViewModel.updateConfig(context)
                     }
                 ) {
-                    Text("保存配置")
+                    Text(stringResource(TextValue.save_config))
                 }
 
                 Button(
@@ -180,21 +183,22 @@ fun HomePage(commonViewModel: CommonViewModel ,openFloatingWindow: () -> Unit) {
                     onClick = {
                         if (selectedConfigData == null) {
                             // 提示用户需要选中配置后才能删除
-                            android.widget.Toast.makeText(context, "需要选中配置后才能删除", android.widget.Toast.LENGTH_SHORT).show()
+
+                            android.widget.Toast.makeText(context, tipsText, android.widget.Toast.LENGTH_SHORT).show()
                         } else {
                             // 弹出确认删除的对话框
                             showDeleteConfirmationDialog = true
                         }
                     }
                 ) {
-                    Text("删除配置")
+                    Text(stringResource(TextValue.delete_config))
                 }
 
                 if (showDeleteConfirmationDialog) {
                     AlertDialog(
                         onDismissRequest = { showDeleteConfirmationDialog = false },
-                        title = { Text("确认删除") },
-                        text = { Text("是否确认删除当前选中配置？") },
+                        title = { Text(stringResource(TextValue.confirm_deletion)) },
+                        text = { Text(stringResource(TextValue.config_delete_tips)) },
                         confirmButton = {
                             Button(
                                 onClick = {
@@ -204,14 +208,14 @@ fun HomePage(commonViewModel: CommonViewModel ,openFloatingWindow: () -> Unit) {
                                     showDeleteConfirmationDialog = false
                                 }
                             ) {
-                                Text("确认")
+                                Text(stringResource(TextValue.confirm))
                             }
                         },
                         dismissButton = {
                             Button(
                                 onClick = { showDeleteConfirmationDialog = false }
                             ) {
-                                Text("取消")
+                                Text(stringResource(TextValue.cancel))
                             }
                         }
                     )
@@ -223,7 +227,7 @@ fun HomePage(commonViewModel: CommonViewModel ,openFloatingWindow: () -> Unit) {
                         openFloatingWindow()
                     }
                 ) {
-                    Text("打开浮窗")
+                    Text(stringResource(TextValue.open_float))
                 }
 
                 TextButton (
@@ -238,7 +242,7 @@ fun HomePage(commonViewModel: CommonViewModel ,openFloatingWindow: () -> Unit) {
                         }
                     }
                 ) {
-                    Text("使用指南")
+                    Text(stringResource(TextValue.usage_guide))
                 }
             }
 

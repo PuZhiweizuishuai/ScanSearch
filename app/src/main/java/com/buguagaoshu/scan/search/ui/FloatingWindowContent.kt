@@ -39,6 +39,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -55,7 +56,7 @@ import com.buguagaoshu.scan.search.data.SendMessage
 import com.petterp.floatingx.util.FxInputHelper
 import dev.jeziellago.compose.markdowntext.MarkdownText
 import kotlinx.serialization.json.Json
-
+import com.buguagaoshu.scan.search.R.string as TextValue
 
 @Preview
 @Composable
@@ -68,6 +69,10 @@ fun FloatingWindowContentPreview() {
 @Composable
 fun FloatingWindowContent(commonViewModel: CommonViewModel) {
     // 使用 mutableStateListOf 来管理可变列表，自动跟踪列表变化
+    val closeKeyBoard = stringResource(TextValue.close_keyboard)
+    val openKeyBoard = stringResource(TextValue.open_keyboard)
+    val streamText = stringResource(TextValue.stream)
+    val closeStreamText = stringResource(TextValue.close_stream)
 
     val textList = remember { mutableStateListOf<ScanSearchData>() }
     val textMap = remember { mutableStateMapOf<String, ScanSearchData>() }
@@ -77,11 +82,13 @@ fun FloatingWindowContent(commonViewModel: CommonViewModel) {
     val showResultVisible = remember { mutableStateOf(false) }
     val showWebView = remember { mutableStateOf(false) }
     val aiResultText = remember { mutableStateOf("") } // 新增AI结果状态
-    val keyboardText =  remember { mutableStateOf("打开键盘") }
-    var showKeyboard = remember { mutableStateOf(false) }
+    val keyboardText =  remember { mutableStateOf(openKeyBoard) }
 
-    val streamBtnText =  remember { mutableStateOf("流") }
-    var streamInfo = remember { mutableStateOf(true) }
+
+    val showKeyboard = remember { mutableStateOf(false) }
+
+    val streamBtnText =  remember { mutableStateOf(streamText) }
+    val streamInfo = remember { mutableStateOf(true) }
 
     val questionText by commonViewModel.questionText.collectAsState()
 
@@ -134,7 +141,7 @@ fun FloatingWindowContent(commonViewModel: CommonViewModel) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "答题浮窗",
+                    text = stringResource(TextValue.float_title),
                     style = MaterialTheme.typography.titleMedium, // 使用预设样式
                     modifier = Modifier.weight(1f), // 占据剩余空间
                 )
@@ -304,7 +311,7 @@ fun FloatingWindowContent(commonViewModel: CommonViewModel) {
             OutlinedTextField(
                 value = questionText,
                 onValueChange = { commonViewModel.updateQuestionText(it) },
-                label = { Text("需要提问搜索的数据") },
+                label = { Text(stringResource(TextValue.search_tips)) },
                 maxLines = 2,
                 shape = RoundedCornerShape(8.dp), // 添加圆角
                 modifier = Modifier.fillMaxWidth()
@@ -324,10 +331,10 @@ fun FloatingWindowContent(commonViewModel: CommonViewModel) {
                         text = streamBtnText.value,
                         onClick = {
                             if (!streamInfo.value) {
-                                streamBtnText.value = "流"
+                                streamBtnText.value = streamText
                                 streamInfo.value = true
                             } else {
-                                streamBtnText.value = "不流"
+                                streamBtnText.value = closeStreamText
                                 streamInfo.value = false
                             }
 
@@ -337,11 +344,11 @@ fun FloatingWindowContent(commonViewModel: CommonViewModel) {
                         text = keyboardText.value,
                         onClick = {
                             if (!showKeyboard.value) {
-                                keyboardText.value = "关闭键盘"
+                                keyboardText.value = closeKeyBoard
                                 showKeyboard.value = true
                                 FxInputHelper.showKeyBoard("ScanSearch", view)
                             } else {
-                                keyboardText.value = "显示键盘"
+                                keyboardText.value = openKeyBoard
                                 showKeyboard.value = false
                                 FxInputHelper.hideKeyBoard("ScanSearch", view)
                             }
@@ -352,7 +359,7 @@ fun FloatingWindowContent(commonViewModel: CommonViewModel) {
 
 
                     ActionButton(
-                        text = "加载数据",
+                        text = stringResource(TextValue.load_data),
                         onClick = {
                             println("点击读取屏幕按钮")
                             // 清除历史数据
@@ -394,7 +401,7 @@ fun FloatingWindowContent(commonViewModel: CommonViewModel) {
                     )
 
                     ActionButton(
-                        text = "确认",
+                        text = stringResource(TextValue.confirm),
                         onClick = {
                             val stringQuestion = StringBuilder()
                             for (item : ScanSearchData in textList) {
@@ -420,7 +427,7 @@ fun FloatingWindowContent(commonViewModel: CommonViewModel) {
 
 
                     ActionButton(
-                        text = "打开网页",
+                        text = stringResource(TextValue.open_web),
                         onClick = {
                             isListVisible.value = false
                             showResultVisible.value = false
@@ -536,7 +543,7 @@ fun FloatingWindowContent(commonViewModel: CommonViewModel) {
                             containerColor = MaterialTheme.colorScheme.primary // 使用主题色
                         )
                     ) {
-                        Text("提问", style = TextStyle(fontSize = 8.sp))
+                        Text(stringResource(TextValue.ask_question), style = TextStyle(fontSize = 8.sp))
                     }
                 }
             }
